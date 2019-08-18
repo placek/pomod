@@ -1,12 +1,35 @@
 #!/usr/local/bin/bash
 
-logfile=$(mktemp $(date +%Y-%m-%d).XXXXXXXXX)
-worktime=1500
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+    -l|--log-file)
+      logfile="$2"
+      shift
+      shift
+      ;;
+    -t|--work-time)
+      worktime="$2"
+      shift
+      shift
+      ;;
+    -f|--entry-format)
+      format="$2"
+      shift
+      shift
+      ;;
+  esac
+done
+
+logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX)}
+worktime=${worktime:-1500}
+format=${format:-"+%s"}
 
 work() {
-  printf "!%d\n" $(date +%s) >> $logfile
+  printf "!%d\n" $(date $format) >> $logfile
   seq 1 $worktime | xargs -I{} sleep 1
-  printf ".%d\n" $(date +%s) >> $logfile
+  printf ".%d\n" $(date $format) >> $logfile
 }
 
 trap 'work' SIGHUP
