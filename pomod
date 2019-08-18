@@ -1,0 +1,13 @@
+#!/usr/local/bin/bash
+
+logfile=$(mktemp $(date +%Y-%m-%d).XXXXXXXXX)
+worktime=1500
+
+work() {
+  printf "!%d\n" $(date +%s) >> $logfile
+  seq 1 $worktime | xargs -I{} sleep 1
+  printf ".%d\n" $(date +%s) >> $logfile
+}
+
+trap 'work' SIGHUP
+while true; do sleep 1; done
