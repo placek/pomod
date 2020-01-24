@@ -22,14 +22,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX)}
+logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX.log)}
 worktime=${worktime:-1500}
-format=${format:-"+%s"}
+format=${format:-"+%Y-%m-%dT%H:%M:%S"}
 
 work() {
-  printf "!%d\n" $(date $format) >> $logfile
+  echo -ne "!$(date "$format")\n" >> $logfile
   seq 1 $worktime | xargs -I{} sleep 1
-  printf ".%d\n" $(date $format) >> $logfile
+  echo -ne ".$(date "$format")\n" >> $logfile
 }
 
 trap 'work' SIGHUP
