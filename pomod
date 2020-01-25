@@ -22,7 +22,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX.log)}
+logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX)}
 worktime=${worktime:-1500}
 format=${format:-"+%Y-%m-%dT%H:%M:%S"}
 
