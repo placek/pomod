@@ -1,14 +1,11 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
+
+>&2 echo "$$"
 
 while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-    -l|--log-file)
-      logfile="$2"
-      shift
-      shift
-      ;;
     -t|--work-time)
       worktime="$2"
       shift
@@ -22,14 +19,13 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-logfile=${logfile:-$(mktemp pomod.$(date +%Y-%m-%d).XXXXXXXXX)}
 worktime=${worktime:-1500}
 format=${format:-"+%Y-%m-%dT%H:%M:%S"}
 
 work() {
-  echo -ne "!$(date "$format")\n" >> $logfile
-  seq 1 $worktime | xargs -I{} sleep 1
-  echo -ne ".$(date "$format")\n" >> $logfile
+  echo -ne "!$(date "$format")\n"
+  for i in $(seq 1 $worktime); do sleep 1; done
+  echo -ne " $(date "$format")\n"
 }
 
 trap 'work' SIGHUP
